@@ -1,12 +1,15 @@
-use std::fs;
-
-fn main(){
+fn get_input() -> Vec<String> {
     let filename = match std::env::args().nth(1) {
         Some(s) => s,
         None => String::from("input.txt")
     };
-    let contents = read_file(filename);
-    let lines: Vec<&str> = contents.lines().collect();
+    let contents = std::fs::read_to_string(filename).unwrap();
+    let lines: Vec<String> = contents.lines().map(str::to_string).collect();
+    return lines.clone();
+}
+
+fn main(){
+    let lines: Vec<String> = get_input();
     let p1: i32 = part1(lines.clone());
     let p2: i32 = part2(lines.clone());
 
@@ -14,7 +17,7 @@ fn main(){
     println!("Part 2: {}", p2);
 }
 
-fn part1(lines: Vec<&str>) -> i32 {
+fn part1(lines: Vec<String>) -> i32 {
     let mut ret: i32 = 0;
     for line in lines.iter() {
         let mut nums = Vec::new();
@@ -40,7 +43,7 @@ fn part1(lines: Vec<&str>) -> i32 {
     return ret;
 }
 
-fn part2(lines: Vec<&str>) -> i32 {
+fn part2(lines: Vec<String>) -> i32 {
     let numlookup: [&str; 10] = ["zero","one","two","three","four","five","six","seven","eight","nine"];
     let mut ret: i32 = 0;
     for line in lines.iter() {
@@ -74,9 +77,4 @@ fn part2(lines: Vec<&str>) -> i32 {
     }
 
     return ret;
-}
-
-fn read_file(filename: String) -> String {
-    let contents = fs::read_to_string(filename).unwrap();
-    return contents
 }
